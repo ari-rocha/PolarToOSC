@@ -45,7 +45,7 @@ impl EventHandler for Handler {
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = env::args().collect();
     let usage = format!(
-        "Uso: {} DEVICE_ID HOST_IP:HOST_PORT CLIENT_IP:CLIENT_PORT",
+        "Uso correto: {} DEVICE_ID HOST_IP:HOST_PORT CLIENT_IP:CLIENT_PORT",
         &args[0]
     );
 
