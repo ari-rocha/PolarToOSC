@@ -79,7 +79,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     sock.send_to(&msg_buf, to_addr).unwrap();
 
     if let Err(why) = polar.subscribe(NotifyStream::HeartRate).await {
-        println!("Could not subscribe to heart rate notifications: {:?}", why)
+        println!("ERROR: Could not subscribe to heart rate notifications: {:?}", why)
     }
 
     polar.event_handler(Handler::new(sock, to_addr));
