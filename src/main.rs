@@ -58,10 +58,10 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     while !polar.is_connected().await {
         match polar.connect().await {
             Err(ArcticError::NoBleAdaptor) => {
-                println!("No bluetooth adapter found");
+                println!("Adaptador Bluetooth não encontrado");
                 return Ok(());
             }
-            Err(why) => println!("Could not connect: {:?}", why),
+            Err(why) => println!("Erro ao conectar: {:?}", why),
             _ => {}
         }
     }
@@ -79,12 +79,12 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     sock.send_to(&msg_buf, to_addr).unwrap();
 
     if let Err(why) = polar.subscribe(NotifyStream::HeartRate).await {
-        println!("ERROR: Could not subscribe to heart rate notifications: {:?}", why)
+        println!("ERRO: {:?}", why)
     }
 
     polar.event_handler(Handler::new(sock, to_addr));
 
     let result = polar.event_loop().await;
-    println!("No more data: {:?}", result);
+    println!("Sem mais dados: {:?}", result);
     Ok(())
 }
