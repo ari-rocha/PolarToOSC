@@ -1,0 +1,39 @@
+name: Orchestrator Build
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup Rust
+      run: |
+        if ! command -v cargo >/dev/null 2>&1; then
+          export DEBIAN_FRONTEND=noninteractive
+          apt-get update -qq
+          apt-get install -y curl ca-certificates build-essential pkg-config libssl-dev
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal --default-toolchain stable
+          source "$HOME/.cargo/env"
+        fi
+        cargo --version
+        rustc --version
+        
+    - name: Build orchestrator
+      run: |
+        source "$HOME/.cargo/env" || true
+        cargo build --release
+        
+    - name: Run tests
+      run: |
+        source "$HOME/.cargo/env" || true
+        cargo test
+        
+    - name: Upload artifacts
+      run: |
+        mkdir -p /workspace/artifacts
+        cp target/release/orchestrator /workspace/artifacts/ || true
+        cp target/release/* /workspace/artifacts/ 2>/dev/null || true
